@@ -34,9 +34,14 @@
 %% Prefer Latin Modern fonts
 \usepackage{lmodern}
 
+\usepackage{makeidx}
+\makeindex
+
 %% Further useful packages (included in most LaTeX distributions)
 \usepackage{amsmath}        % extensions for typesetting of math
-\usepackage{amsfonts}       % math fonts
+% TODO: pick a font
+\usepackage[charter]{mathdesign}
+% \usepackage{amsfonts}       % math fonts
 \usepackage{amsthm}         % theorems, definitions, etc.
 \usepackage{bbding}         % various symbols (squares, asterisks, scissors, ...)
 \usepackage{bm}             % boldface symbols (\bm)
@@ -156,6 +161,8 @@ Abstract.
 \chapter{Attachments}
 
 \section{First Attachment}
+
+\printindex
 
 \openright
 \end{document}

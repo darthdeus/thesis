@@ -72,7 +72,7 @@ We can solve for all of these constraints simultaneously using Lagrange multipli
 \todo{check the functional derivative, so far only copied from DLB} We set the following functional derivative of \eqref{eq:gauss-lagrangian} equal to $0$:
 
 \begin{equation}
-\frac{\delta}{\delta f(x)} \gL = \lambda_1 + \lambda_2 x + \lambda_3 (x - \mu)^2 - 1 - \log f(x) = 0.
+\forall x, \frac{\delta}{\delta f(x)} \gL = \lambda_1 + \lambda_2 x + \lambda_3 (x - \mu)^2 - 1 - \log f(x) = 0.
 \end{equation}
 
 Now simply solving for $f(x)$ we obtain:
@@ -82,15 +82,111 @@ f(x) = \exp \left( \lambda_1 + \lambda_2 x + \lambda_3 (x - \mu)^2 - 1 \right).
 \end{equation}
 
 \todo{rewrite, mostly written as in DLB}
-To solve the optimization problem we can choose any value for the $\lambda$. We set $\lambda_1 = 1 - \log \sigma \sqrt{2 \pi}$, $\lambda_2 = 0$, and $\lambda_3 = - \frac{1}{2 \sigma^2}$ to obrain
+To solve the optimization problem we can choose any value for the $\lambda$. We set $\lambda_1 = 1 - \log \sigma \sqrt{2 \pi}$, $\lambda_2 = 0$, and $\lambda_3 = - \frac{1}{2 \sigma^2}$ to obtain the density of a Gaussian distribution
 
 \begin{equation}
-f(x) = \gN(x; \mu, \sigma^2).
+f(x) = \gN(x | \mu, \sigma^2).
 \end{equation}
 
-\section{Derivation of a multivariate gaussian}
+This derivation is one of the reason why a Gaussian distribution is so useful. \todo{rewrite, copied from DLB} Because the normal distribution has the maximum entropy, we impose the least possible amount of structure by making this assumption.
 
-\section{Conditional and marginal distribution of a multivariate gaussian}
+\section{Multivariate Gaussian Distribution}
 
-\section{Gaussian process}
+In the previous section we derived the Gaussian distribution for a single variable $x$, which has the following density function: \todo{better explain the normalization constant}
 
+\begin{equation}
+\gN(x | \mu, \sigma^2) = \frac{1}{(2 \pi \sigma^2)^{1/2}} \exp \left( \frac{1}{2\sigma^2} (x - \mu)^2 \right) \label{eq:single-gaussian}
+\end{equation}
+
+where $\mu$ is the mean and $\sigma^2$ is the variance. In the case where $\vx$ is a $D$-dimensional vector, the multivariate Gaussian takes the following form:
+
+\begin{equation}
+\gN(x | \mu, \mSigma) = \frac{1}{(2 \pi)^{D/2} |\mSigma|^{1/2}} \exp \left( -\frac{1}{2} (\vx - \vmu)^T \mSigma^{-1} (\vx - \vmu) \right) \label{eq:multi-gaussian}
+\end{equation}
+
+where $\vmu$ is a $D$-dimensional vector, $\mSigma$ is a $D \times D$ covariance matrix, and $|\mSigma|$ is the determinant of $\mSigma$.
+
+We note here that the functional dependence of the Gaussian on $\vx$ is through the quadratic form
+
+\begin{equation}
+\Delta^2 = (\vx - \vmu)^T \mSigma^{-1} (\vx - \vmu)
+\end{equation}
+
+which appears in the exponent \citep{bishop2016pattern} \todo{rewrite and remove the quote, or keep it?}. The quantity $\Delta$ is called the \newterm{Mahalanobis distance} from $\vmu$ to $\vx$ and reduces to the Euclidean distance when $\mSigma$ is the identity matrix. We will make use of the quadratic form in the following section when we derive the conditional and marginal distribution of the multivariate Gaussian.
+
+Since $\mSigma$ is a covariance matrix we know it is positive definite \todo{why not only semidefinite? describe the degenerate case}, we can perform \newterm{eigendecomposition} on it to get $\mSigma = \mU \mLambda \mU^T$, where $\mU$ is an ortogonal matrix of eigenvectors, and $\mLambda$ is a diagonal matrix of eigenvalues. Basic matrix algebra gives us the following:
+
+\begin{equation}
+\mSigma^{-1} = (\mU^T)^{-1} \mLambda^{-1} \mU^{-1} = \mU \mLambda^{-1} \mU^T = \sum_{i = 1}^D \frac{1}{\lambda_i} \vu_i \vu_i^T
+\end{equation}
+
+where the second to last equality comes from $\mU$ being orthogonal ($\mU^{-1} = \mU^T$). We can use this to obtain a different form of the Mahalanobis distance: \todo{cite bishop?}
+
+\begin{align}
+(\vx - \vmu)^T \mSigma^{-1} (\vx - \vmu) &= (\vx - \vmu)^T \left( \sum_{i = 1}^D \frac{1}{\lambda_i} \vu_i \vu_i^T \right) (\vx - \vmu) \\
+&= \sum_{i = 1}^D (\vx - \vmu)^T \frac{1}{\lambda_i} \vu_i \vu_i^T (\vx - \vmu) \\
+&= \sum_{i = 1}^D \frac{y_i^2}{\lambda_i} \label{eq:mvn-ellipse}
+\end{align}
+
+where $y_i = u_{i}^{T} (\vx - \vmu)$ \todo{use a notation for definition}. The equation \eqref{eq:mvn-ellipse} has exactly the same form as a $D$-dimensional ellipse. From this we conclude that the contour lines of a multivariate Gaussian will be elliptical, where the eigenvectors determine the orientation of the ellipse, and the eigenvalues determine its radius \todo{better word?} along each eigenvector.
+
+\todo{complete the properties and derivation}
+
+\section{Conditional and Marginal Gaussian Distribution}
+
+In this section we derive the conditional $p(x_1 | x_2)$ and marginal $p(x_1)$ for a given joint distribution $p(x_1, x_2)$. One of the interesting properties of a multivariate Gaussian is that both the conditional and the marginal are also Gaussian and we can easily compute their parameters in closed from based on the parameters of the joint distribution.
+
+Supposed $\vx$ is a $D$-dimensional random vector with a Gaussian distribution $\gN(\vx | \vmu, \mSigma)$, and that $\vx$ is partitioned into two vectors $\vx_1$ and $\vx_2$ such that
+
+\begin{equation}
+\vx = \partx
+\end{equation}
+
+We also partition the mean vector $\vmu$ and the covariance matrix $\mSigma$ into a block matrix. We also define the inverse of the covariance matrix $\mLambda = \mSigma^{-1}$, which will simplify a few of the equations that follow. We will derive the exact form of $\mLambda$ and of its individual blocks later in this section. For now we simply use the fact that $\mSigma$ is positive-definite, and thus it is invertible. The matrix $\mLambda$ is also known as a \newterm{precision matrix}.
+
+\begin{equation}
+\vmu = \partmu,
+\mSigma = \partsigma, \mLambda = \mSigma^{-1} = \partlambda \label{eq:mvn-partition}
+\end{equation}
+
+Note that since $\mSigma$ is a symmetric matrix, $\ms{12}^T = \ms{21}$, and similarly $\ml{12}^T = \ml{21}$. Similarly, $\ms{11}$, $\ms{22}$, $\ml{11}$, and $\ml{22}$ are all symmetrical.
+
+Before we derive the parameters of the conditional, we show that the conditional distribution $p(x_1 | x_2)$ is a Gaussian. To do this, we take the joint distribution $p(x_1, x_2)$ and fix the value of $x_2$ \citep{bishop2016pattern}. Using the definition of conditional probability $p(x_1, x_2) = p(x_1 | x_2) p(x_2)$ we can see that after fixing the value of $x_2$, $p(x_2)$ is simply a normalization constant, and the remaining term $p(x_1 | x_2)$ is a function of $x_1$ which together with the normalization constant gives us the conditional probability distribution on $x_1$.
+
+We now use the partitioned form of the multivariate Gaussian defined by \eqref{eq:mvn-partition} to show that $p(x_1 | x_2)$ is actually a Gaussian. Let us begin by looking at the exponent in \eqref{eq:multi-gaussian}:
+
+\begin{align}
+-\frac{1}{2} (\vx - \vmu)^T \mLambda (\vx - \vmu) &= 
+-\frac{1}{2} \left(\partx - \partmu \right)^T \partlambda \left(\partx - \partmu \right) \\
+&= -\frac{1}{2} \partxmu^T \partlambda \partxmu
+\end{align}
+
+To make the next few equations easier to follow we set $\vy_1 = \vx_1 - \vmu_1$ and $\vy_2 = \vx_2 - \vmu_2$.
+
+\begin{align}
+-\frac{1}{2} \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} ^T \partlambda \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} &= -\frac{1}{2} \begin{bmatrix} \vy_1 \ml{11} + \vy_2 \ml{21} \\ \vy_1 \ml{12} + \vy_2 \ml{22} \end{bmatrix} ^T \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} \\
+&= -\frac{1}{2} \left( \vy_1^T \ml{11} \vy_1 + \vy_2^T \ml{21} \vy_1 + \vy_1^T \ml{12} \vy_2 + \vy_2^T \ml{22} \vy_2 \right) \\
+&= -\frac{1}{2} (\vx_1 - \vmu_1)^T \ml{11} (\vx_1 - \vmu_1) + \\
+  &-\frac{1}{2} (\vx_2 - \vmu_2)^T \ml{21} (\vx_1 - \vmu_1) + \\
+  &-\frac{1}{2} (\vx_1 - \vmu_1)^T \ml{12} (\vx_2 - \vmu_2) + \\
+  &-\frac{1}{2} (\vx_2 - \vmu_2)^T \ml{22} (\vx_2 - \vmu_2)
+\end{align}
+
+\todo{fix + alignment and equation numbering}
+
+We see that this is a quadratic form in $x_1$, and hence the corresponding conditional distribution $p(x_1 | x_2)$ will be Gaussian. \todo{better explain, cite bishop again?}.
+
+
+\section{Gaussian Processes}
+
+\newterm{Gaussian Process} is a \newterm{stochastic process} (a collection of random variables), such that every subset of those random variables has a multivariate Gaussian distribution.
+
+\begin{equation}
+f(x) \sim \gG \gP (m(x), \kappa(x, x'))
+\end{equation} \todo{finish}
+
+\todo{describe prior over functions}
+
+\section{Noise-less Gaussian Process Regression}
+
+\section{Noisy Gaussian Process Regression}

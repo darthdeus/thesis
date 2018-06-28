@@ -12,7 +12,7 @@
 \newcommand{\captiond}{{\em (d)}}
 
 % Highlight a newly defined term
-\newcommand{\newterm}[1]{{\bf #1}}
+\newcommand{\newterm}[1]{{\bf #1 \index{#1}}}
 
 
 % Figure reference, lower-case.
@@ -62,6 +62,17 @@
 
 \def\eps{{\epsilon}}
 
+% Covariance matrix helpers
+\def\ms#1{{\mSigma_{#1}}}
+\def\ml#1{{\mLambda_{#1}}}
+
+% Partition matrix helpers
+
+\def\partx{{\begin{bmatrix} \vx_1 \\ \vx_2 \end{bmatrix}}}
+\def\partmu{{\begin{bmatrix} \vmu_1 \\ \vmu_2 \end{bmatrix}}}
+\def\partxmu{{\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix}}}
+\def\partsigma{{\begin{bmatrix} \ms{11} & \ms{12} \\ \ms{21} & \ms{22} \end{bmatrix}}}
+\def\partlambda{{\begin{bmatrix} \ml{11} & \ml{12} \\ \ml{21} & \ml{22} \end{bmatrix}}}
 
 % Random variables
 \def\reta{{\textnormal{$\eta$}}}
