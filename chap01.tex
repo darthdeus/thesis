@@ -202,7 +202,61 @@ We see that this is a quadratic form in $x_1$, and hence the corresponding condi
 
 \section{Sum of Gaussians and Other Properties}
 
-\citep{eisenberg2008sum} \citep{mitzenmacher2017probability}
+\begin{defn}
+The \newterm{moment generating function} of a random variable $X$ is
+
+\begin{equation}
+M_X(t) = \E[e^{t X}].
+\end{equation}
+\end{defn}
+
+We state the following result without proof \todo{citace, pridat proof}.
+
+\begin{thm}
+Let $X$ and $Y$ be two random variables. If
+
+\[
+M_X(t) = M_Y(t)
+\]
+
+for all $t \in (-\delta, \delta)$ for some $\delta > 0$, then $X$ and $Y$ have the same distribution. We'll use this theorem to show that the sum of Gaussian random variables has a Gaussian distribution.
+\end{thm}
+
+\begin{thm} \citep{mitzenmacher2017probability}\label{thm:sum-independent-gaussian}
+If $X$ and $Y$ are independent random variables, then
+
+\[
+M_{X + Y}(t) = M_X(t) M_Y(t)
+\]
+\end{thm}
+\begin{proof}
+\[
+M_{X + Y}(t) = \E[e^{t(X + Y)}] = \E[e^{tX} e^{tY}] = \E[e^{tX}] \E[e^{tY}] = M_X(t) M_Y(t)
+\]
+
+Here we have used that $X$ and $Y$ are independent -- and hence $e^{tX}$ and $e^{tY}$ are independent -- to conclude that $\E[e^{tX} e^{tY}] = \E[e^{tX}] \E[e^{tY}]$. \todo{prepsat? prakticky opsano}
+\end{proof}
+
+\begin{thm} Moment generating function of a Gaussian distribution
+
+\todo{doplnit}
+\todo{unify normal/gaussian naming}
+\end{thm}
+
+\begin{thm}[\citep{mitzenmacher2017probability}]
+Let $X$ and $Y$ be independent random variables with distributions $\gN(\mu_1, \sigma_1^2)$ and $\gN(\mu_2, \sigma_2^2)$, respectively. Then $X + Y$ is distributed according to the normal distribution $\gN(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2)$.
+\end{thm}
+\begin{proof}
+The moment generating function of a sum of independent random variables is the product of their moment generating functions (Theorem \ref{thm:sum-independent-gaussian}). Thus,
+
+\begin{equation}
+M_{X + Y}(t) = M_X(t) M_Y(t) = e^{t^2 \sigma_1^2 / 2 + \mu_1 t} e^{t^2 \sigma_2^2 / 2 + \mu_2 t} = e^{t^2 (\sigma_1^2 + \sigma_1^2) / 2 + (\mu_1 + \mu_2) t}
+\end{equation}
+
+The rightmost expression is the moment generating function of a normal distribution. Theorem \ref{thm:sum-independent-gaussian} implies that $X + Y$ has a normal distribution with the corresponding parameters. \todo{opsano z \citep{mitzenmacher2017probability}}
+\end{proof}
+
+\citep{eisenberg2008sum}
 
 TODO notes:
 
