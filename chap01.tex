@@ -1,8 +1,92 @@
-\chapter{Title of the first chapter}
+\chapter{Basic Definitions}
 
-An~example citation: \cite{Andel07}
+\section{Information Theory}
 
-\section{Gaussian distribution maximizes entropy}
+The basic intuition behind information theory is that learning that an unlikely event has occurred is more informative than learning that a likely event has occurred \citep{Goodfellow-et-al-2016}. We define \newterm{self-information} of a random event $x$ as
+
+\begin{equation}
+I(x) = -\log P(x).
+\end{equation}
+
+The overall information in a probability distribution is quantified by \newterm{Shanon entropy}:
+
+\begin{equation}
+H(X) = \E_{X \sim P} [ I(X) ] = -\E_{X \sim P} [ log P(x) ]
+\end{equation}
+
+We can extend this to the case of a continuous random variable with a probability density function $f$, in which case we call $H(f)$ the \newterm{differential entropy} and define it as
+
+\begin{equation}
+H(f) = - \int_X f(x) log f(x) \dx
+\end{equation}
+
+\section{Calculus of Variations}
+
+Before we can derive the Gaussian distribution, we first introduce a few concepts from the calculus of variations.
+
+A \newterm{functional} is a mapping which assigns real numbers to each function belonging to some class \citep{gelfand2012calculus}. We can say that a functional is a special kind of function, where the argument is itself a function. In our case the functional will be the differential entropy $H(f)$. Similarly to derivatives and partial derivatives in real analysis, we can take \newterm{functional derivatives} of a functional $H(f)$ with respect
+
+As full derivation of functional derivatives is outside the scope of this thesis, we only present the following theorem without proof, and refer the reader to the above cited textbook for a proof \todo{find the proof}.
+
+For differentiable functions $f(\vx)$ and $g(y, \vx)$ with continuous derivatives, the following holds
+
+\begin{equation}
+\frac{\delta}{\delta f(\vx)} \int g(f(\vx), \vx) d \vx = \frac{\partial}{\partial y} g(f(\vx), \vx).
+\end{equation}
+
+\todo{rewrite, copied over from DLB} To gain some intuition for this identity, one can think of $f(\vx)$ as being a vector with uncountably many elements, indexed by a real vector $\vx$. In this (somewhat incomplete) view, the identity providing the functional derivatives is the same as what we would obtain for a vector $\vtheta \in \sR^n$ indexed by positive integers:
+
+\begin{equation}
+\frac{\partial}{\partial \theta_i} \sum_j g(\theta_j, j) = \frac{\partial}{\partial \theta_i} g(\theta_i, i).
+\end{equation}
+
+\section{Maximum Entropy Probability Distribution}
+
+In this section we derive the Gaussian distribution as a distribution which maximizes differential entropy when the mean and variance are fixed. Similarly as we would optimize a function by computing its gradient, setting it to zero and solving the equation, we can optimize a functional by solving for a function where the variational derivative is zero at every point.
+
+Because we want our resulting functional to be a probability distribution, we need its density to integrate to $1$, specifically
+
+\begin{equation}
+\int_{-\infty}^{\infty} p(x) \dx = 1
+\end{equation}
+
+We also want the mean and variance to be fixed constants $\mu$ and $\sigma^2$ respectively. This gives us the following
+
+\begin{align}
+\int_{-\infty}^{\infty} x p(x) \dx = \mu \\
+\int_{-\infty}^{\infty} x^2 p(x) \dx = \sigma^2
+\end{align}
+
+We can solve for all of these constraints simultaneously using Lagrange multipliers. The Lagrangian has the following form:
+
+\begin{align}
+\gL[f] &= H[f] + \lambda_1 \left( \int f(x) \dx - 1 \right) + \lambda_2 \left( \int x f(x) \dx - \mu \right) + \\
+ &+ \lambda_3 \left( \int (x - \mu)^2 f(x) \dx - \sigma^2 \right) \\
+&= -\int f(x) \log f(x) \dx  + \lambda_1 \left( \int f(x) \dx - 1 \right) + \\
+&+ \lambda_2 \left( \int x p(x) \dx - \mu \right) + \lambda_3 \left( \int (x - \mu)^2  f(x) \dx - \sigma^2 \right) \\
+&= \int ( - f(x) \log f(x) + \lambda_1 f(x) - \lambda_1 + \\
+&+ \lambda_2 x p(x) - \lambda_2 \mu + \lambda_3 (x - \mu)^2  f(x) - \lambda_3 \sigma^2 ) \dx \\
+&= \int ( - f(x)\log f(x) + \lambda_1 f(x) + \lambda_2 x f(x) + \lambda_3 (x - \mu)^2  f(x) ) \dx - \lambda_1 - \lambda_2 \mu - \lambda_3 \sigma^2 \label{eq:gauss-lagrangian}
+\end{align}
+
+\todo{check the functional derivative, so far only copied from DLB} We set the following functional derivative of \eqref{eq:gauss-lagrangian} equal to $0$:
+
+\begin{equation}
+\frac{\delta}{\delta f(x)} \gL = \lambda_1 + \lambda_2 x + \lambda_3 (x - \mu)^2 - 1 - \log f(x) = 0.
+\end{equation}
+
+Now simply solving for $f(x)$ we obtain:
+
+\begin{equation}
+f(x) = \exp \left( \lambda_1 + \lambda_2 x + \lambda_3 (x - \mu)^2 - 1 \right).
+\end{equation}
+
+\todo{rewrite, mostly written as in DLB}
+To solve the optimization problem we can choose any value for the $\lambda$. We set $\lambda_1 = 1 - \log \sigma \sqrt{2 \pi}$, $\lambda_2 = 0$, and $\lambda_3 = - \frac{1}{2 \sigma^2}$ to obrain
+
+\begin{equation}
+f(x) = \gN(x; \mu, \sigma^2).
+\end{equation}
 
 \section{Derivation of a multivariate gaussian}
 

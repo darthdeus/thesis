@@ -50,6 +50,12 @@
 \usepackage{booktabs}       % improved horizontal lines in tables
 \usepackage{paralist}       % improved enumerate and itemize
 \usepackage[usenames]{xcolor}  % typesetting in color
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+
+\newlength{\notationgap}
+\setlength{\notationgap}{1pc}
+
+\input{math_commands.tex}
 
 %%% Basic information on the thesis
 
@@ -115,6 +121,7 @@ Abstract.
 
 %%% Each chapter is kept in a separate file
 \include{preface}
+\include{notation}
 \include{chap01}
 \include{chap02}
 
