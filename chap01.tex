@@ -47,29 +47,41 @@ In this section we derive the Gaussian distribution as a distribution which maxi
 Because we want our resulting functional to be a probability distribution, we need its density to integrate to $1$, specifically
 
 \begin{equation}
-\int_{-\infty}^{\infty} p(x) \dx = 1
+\int f(x) \dx = 1
 \end{equation}
 
 We also want the mean and variance to be fixed constants $\mu$ and $\sigma^2$ respectively. This gives us the following
 
 \begin{align}
-\int_{-\infty}^{\infty} x p(x) \dx = \mu \\
-\int_{-\infty}^{\infty} x^2 p(x) \dx = \sigma^2
+\int x f(x) \dx = \mu \\
+\int (x - \mu) ^2 f(x) \dx = \sigma^2
 \end{align}
 
 We can solve for all of these constraints simultaneously using Lagrange multipliers. The Lagrangian has the following form:
 
 \begin{align}
-\gL[f] &= H[f] + \lambda_1 \left( \int f(x) \dx - 1 \right) + \lambda_2 \left( \int x f(x) \dx - \mu \right) + \\
- &+ \lambda_3 \left( \int (x - \mu)^2 f(x) \dx - \sigma^2 \right) \\
-&= -\int f(x) \log f(x) \dx  + \lambda_1 \left( \int f(x) \dx - 1 \right) + \\
-&+ \lambda_2 \left( \int x p(x) \dx - \mu \right) + \lambda_3 \left( \int (x - \mu)^2  f(x) \dx - \sigma^2 \right) \\
-&= \int ( - f(x) \log f(x) + \lambda_1 f(x) - \lambda_1 + \\
+\begin{split}
+\gL[f] ={}& H[f] + \lambda_1 \left( \int f(x) \dx - 1 \right) + \lambda_2 \left( \int x f(x) \dx - \mu \right) + \\
+ &+ \lambda_3 \left( \int (x - \mu)^2 f(x) \dx - \sigma^2 \right)
+\end{split} \\
+%
+\begin{split}
+={}& -\int f(x) \log f(x) \dx  + \lambda_1 \left( \int f(x) \dx - 1 \right) + \\
+&+ \lambda_2 \left( \int x p(x) \dx - \mu \right) + \lambda_3 \left( \int (x - \mu)^2  f(x) \dx - \sigma^2 \right)
+\end{split} \\
+%
+\begin{split}
+={}& \int ( - f(x) \log f(x) + \lambda_1 f(x) - \lambda_1 + \\
 &+ \lambda_2 x p(x) - \lambda_2 \mu + \lambda_3 (x - \mu)^2  f(x) - \lambda_3 \sigma^2 ) \dx \\
-&= \int ( - f(x)\log f(x) + \lambda_1 f(x) + \lambda_2 x f(x) + \lambda_3 (x - \mu)^2  f(x) ) \dx - \lambda_1 - \lambda_2 \mu - \lambda_3 \sigma^2 \label{eq:gauss-lagrangian}
+\end{split} \\
+%
+\begin{split}
+={}& \int ( - f(x)\log f(x) + \lambda_1 f(x) + \lambda_2 x f(x) + \lambda_3 (x - \mu)^2  f(x) ) \dx + \\
+&- \lambda_1 - \lambda_2 \mu - \lambda_3 \sigma^2 \label{eq:gauss-lagrangian}
+\end{split}
 \end{align}
 
-\todo{check the functional derivative, so far only copied from DLB} We set the following functional derivative of \eqref{eq:gauss-lagrangian} equal to $0$:
+\todo{check the functional derivative, so far only copied from DLB, fix alignment of = in 1.11} We set the following functional derivative of \eqref{eq:gauss-lagrangian} equal to $0$:
 
 \begin{equation}
 \forall x, \frac{\delta}{\delta f(x)} \gL = \lambda_1 + \lambda_2 x + \lambda_3 (x - \mu)^2 - 1 - \log f(x) = 0.
@@ -164,18 +176,41 @@ We now use the partitioned form of the multivariate Gaussian defined by \eqref{e
 To make the next few equations easier to follow we set $\vy_1 = \vx_1 - \vmu_1$ and $\vy_2 = \vx_2 - \vmu_2$.
 
 \begin{align}
--\frac{1}{2} \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} ^T \partlambda \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} &= -\frac{1}{2} \begin{bmatrix} \vy_1 \ml{11} + \vy_2 \ml{21} \\ \vy_1 \ml{12} + \vy_2 \ml{22} \end{bmatrix} ^T \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} \\
-&= -\frac{1}{2} \left( \vy_1^T \ml{11} \vy_1 + \vy_2^T \ml{21} \vy_1 + \vy_1^T \ml{12} \vy_2 + \vy_2^T \ml{22} \vy_2 \right) \\
-&= -\frac{1}{2} (\vx_1 - \vmu_1)^T \ml{11} (\vx_1 - \vmu_1) + \\
-  &-\frac{1}{2} (\vx_2 - \vmu_2)^T \ml{21} (\vx_1 - \vmu_1) + \\
-  &-\frac{1}{2} (\vx_1 - \vmu_1)^T \ml{12} (\vx_2 - \vmu_2) + \\
-  &-\frac{1}{2} (\vx_2 - \vmu_2)^T \ml{22} (\vx_2 - \vmu_2)
+\begin{split}
+-\frac{1}{2} \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} ^T \partlambda \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} ={}& -\frac{1}{2} \begin{bmatrix} \vy_1 \ml{11} + \vy_2 \ml{21} \\ \vy_1 \ml{12} + \vy_2 \ml{22} \end{bmatrix} ^T \begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix}
+\end{split} \\
+%
+\begin{split}
+={}& -\frac{1}{2} \left( \vy_1^T \ml{11} \vy_1 + \vy_2^T \ml{21} \vy_1 + \vy_1^T \ml{12} \vy_2 + \vy_2^T \ml{22} \vy_2 \right)
+\end{split} \\
+%
+\begin{split}
+={}& -\frac{1}{2} (\vx_1 - \vmu_1)^T \ml{11} (\vx_1 - \vmu_1) {}+ \\
+  &-\frac{1}{2} (\vx_2 - \vmu_2)^T \ml{21} (\vx_1 - \vmu_1) {}+ \\
+  &-\frac{1}{2} (\vx_1 - \vmu_1)^T \ml{12} (\vx_2 - \vmu_2) {}+ \\
+  &-\frac{1}{2} (\vx_2 - \vmu_2)^T \ml{22} (\vx_2 - \vmu_2) \label{eq:mvn-quadratic-form}
+\end{split}
 \end{align}
 
-\todo{fix + alignment and equation numbering}
+\todo{fix + alignment and equation numbering, fix spacing of + in 1.29}
 
-We see that this is a quadratic form in $x_1$, and hence the corresponding conditional distribution $p(x_1 | x_2)$ will be Gaussian. \todo{better explain, cite bishop again?}.
+We see that this is a quadratic form in $x_1$, and hence the corresponding conditional distribution $p(x_1 | x_2)$ will be Gaussian. \todo{better explain, cite bishop again?}. We can use \eqref{eq:mvn-quadratic-form} to derive the parameters of $p(x_1 | x_2)$ since
 
+\todo{partition matrix inversion lemma}
+
+\citep{murphy2012machine}
+
+\section{Sum of Gaussians and Other Properties}
+
+\citep{eisenberg2008sum} \citep{mitzenmacher2017probability}
+
+TODO notes:
+
+\begin{enumerate}
+\item sum of gaussians + other densities tends towards Gaussian (central limit theorem\
+\item sum of gaussians is a gaussian
+\item scaling a gaussian leads to a gaussian
+\end{enumerate}
 
 \section{Gaussian Processes}
 
