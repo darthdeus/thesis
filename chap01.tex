@@ -338,8 +338,72 @@ Which gives us the final form, making use of the fact that to invert a diagonal 
 
 \end{proof}
 
-\begin{thm}
+\begin{thm} Conditional and marginal Gaussian parameters \citep{murphy2012machine} \todo{popsat vetu poradne}
+
+\begin{align}
+p(x_1, x_2) &= p(x_1 | x_2) p(x_2) \\
+&= \gN(x_1 | \vmu_{1|2}, \ms{1|2}) \gN(x_2 | \vmu_2, \ms{22})
+\end{align}
+
+the parameters are \todo{zkontrolovat kde je $\mu$ a chybi tam vector}
+
+\begin{align}
+\vmu_{1|2} &= \vmu_1 - \ms{12} \ms{22}^{-1} (\vx_2 - \vmu_2) \\
+\ms{1|2} &= \mSigma / \ms{22} = \ms{11} - \ms{12} \ms{22}^{-1} \ms{21}
+\end{align}
 \end{thm}
+
+\begin{proof}
+
+To make the equations more readable, we define 
+
+\begin{align}
+\vy_1 &= \vx_1 - \vmu_1 \\
+\vy_2 &= \vx_2 - \vmu_2
+\end{align}
+
+\todo{chybi tecka?}
+
+We then simply take the block definition of a multivariate Gaussian and multiply everything out
+
+\begin{align}
+E &= \exp \left\lbrace -\frac{1}{2}
+\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix}^T
+\partsigma
+\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix} \right\rbrace \\
+%
+&= \exp \left\lbrace -\frac{1}{2}
+\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix}^T
+\begin{bmatrix} \mI & \mZero \\ -\mSigma_{22}^{-1} \mSigma_{21} & \mI \end{bmatrix}
+\begin{bmatrix} (\mSigma/\mSigma_{22})^{-1} & \mZero \\ \mZero & \mSigma_{22}^{-1} \end{bmatrix} \right. \times \\
+&\left. \qquad\qquad \times
+\begin{bmatrix} \mI & -\mSigma_{12} \mSigma_{22}^{-1} & \\ \mZero & \mI \end{bmatrix}
+\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix} \right\rbrace \nonumber \\
+%
+&= \exp \left\lbrace -\frac{1}{2}
+\begin{bmatrix} (\vx_1 - \vmu_1)^T - (\vx_2 - \vmu_2)^T (\mSigma_{22}^{-1} \mSigma_{21}) \\
+\vx_2 - \vmu_2
+\end{bmatrix}^T
+\begin{bmatrix} (\mSigma/\mSigma_{22})^{-1} & \mZero \\ \mZero & \mSigma_{22}^{-1} \end{bmatrix} \right. \times \\
+&\left. \qquad\qquad \times 
+\begin{bmatrix} \mI & -\mSigma_{12} \mSigma_{22}^{-1} & \\ \mZero & \mI \end{bmatrix}
+\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix} \right\rbrace \nonumber \\
+%
+&= \exp \left\lbrace -\frac{1}{2}
+\begin{bmatrix} ((\vx_1 - \vmu_1)^T - (\vx_2 - \vmu_2)^T (\mSigma_{22}^{-1} \mSigma_{21})) (\mSigma/\mSigma_{22})^{-1} \\
+(\vx_2 - \vmu_2) \mSigma_{22}^{-1}
+\end{bmatrix}^T
+\right. \times \\
+&\left. \qquad\qquad \times
+\begin{bmatrix} \vx_1 - \vmu_1 -\mSigma_{12} \mSigma_{22}^{-1} (\vx_2 - \vmu_2) \\ \vx_2 - \vmu_2 \end{bmatrix}
+\right\rbrace \nonumber \\
+%
+&= \exp \left\lbrace -\frac{1}{2}
+((\vx_1 - \vmu_1)^T - (\vx_2 - \vmu_2)^T (\mSigma_{22}^{-1} \mSigma_{21})) (\mSigma/\mSigma_{22})^{-1} (\vx_1 - \vmu_1 -\mSigma_{12} \mSigma_{22}^{-1} (\vx_2 - \vmu_2))
+\right\rbrace \times \\
+& \qquad\qquad \times \exp \left\lbrace -\frac{1}{2} (\vx_2 - \vmu_2) \mSigma_{22}^{-1} (\vx_2 - \vmu_2) \right\rbrace \nonumber
+\end{align}
+\end{proof}
 
 \section{Gaussian Processes}
 
