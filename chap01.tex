@@ -368,42 +368,55 @@ We then simply take the block definition of a multivariate Gaussian and multiply
 
 \begin{align}
 E &= \exp \left\lbrace -\frac{1}{2}
-\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix}^T
+\begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix}^T
 \partsigma
-\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix} \right\rbrace \\
+\begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} \right\rbrace \\
 %
 &= \exp \left\lbrace -\frac{1}{2}
-\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix}^T
+\begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix}^T
 \begin{bmatrix} \mI & \mZero \\ -\mSigma_{22}^{-1} \mSigma_{21} & \mI \end{bmatrix}
-\begin{bmatrix} (\mSigma/\mSigma_{22})^{-1} & \mZero \\ \mZero & \mSigma_{22}^{-1} \end{bmatrix} \right. \times \\
-&\left. \qquad\qquad \times
+\begin{bmatrix} (\mSigma/\mSigma_{22})^{-1} & \mZero \\ \mZero & \mSigma_{22}^{-1} \end{bmatrix}
 \begin{bmatrix} \mI & -\mSigma_{12} \mSigma_{22}^{-1} & \\ \mZero & \mI \end{bmatrix}
-\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix} \right\rbrace \nonumber \\
+\begin{bmatrix} \vy_1 \\ \vy_2 \end{bmatrix} \right\rbrace \\
 %
 &= \exp \left\lbrace -\frac{1}{2}
-\begin{bmatrix} (\vx_1 - \vmu_1)^T - (\vx_2 - \vmu_2)^T (\mSigma_{22}^{-1} \mSigma_{21}) \\
-\vx_2 - \vmu_2
+\begin{bmatrix} \vy_1^T - \vy_2^T (\mSigma_{22}^{-1} \mSigma_{21}) \\
+\vy_2
 \end{bmatrix}^T
-\begin{bmatrix} (\mSigma/\mSigma_{22})^{-1} & \mZero \\ \mZero & \mSigma_{22}^{-1} \end{bmatrix} \right. \times \\
-&\left. \qquad\qquad \times 
-\begin{bmatrix} \mI & -\mSigma_{12} \mSigma_{22}^{-1} & \\ \mZero & \mI \end{bmatrix}
-\begin{bmatrix} \vx_1 - \vmu_1 \\ \vx_2 - \vmu_2 \end{bmatrix} \right\rbrace \nonumber \\
+\begin{bmatrix} (\mSigma/\mSigma_{22})^{-1} & \mZero \\ \mZero & \mSigma_{22}^{-1} \end{bmatrix} \begin{bmatrix} \vy_1 -\mSigma_{12} \mSigma_{22}^{-1} (\vy_2) \\ \vy_2 \end{bmatrix} \right\rbrace \\
 %
 &= \exp \left\lbrace -\frac{1}{2}
-\begin{bmatrix} ((\vx_1 - \vmu_1)^T - (\vx_2 - \vmu_2)^T (\mSigma_{22}^{-1} \mSigma_{21})) (\mSigma/\mSigma_{22})^{-1} \\
-(\vx_2 - \vmu_2) \mSigma_{22}^{-1}
+\begin{bmatrix} (\vy_1^T - \vy_2^T \mSigma_{22}^{-1} \mSigma_{21}) (\mSigma/\mSigma_{22})^{-1} \\
+\vy_2^T \mSigma_{22}^{-1}
 \end{bmatrix}^T
-\right. \times \\
-&\left. \qquad\qquad \times
-\begin{bmatrix} \vx_1 - \vmu_1 -\mSigma_{12} \mSigma_{22}^{-1} (\vx_2 - \vmu_2) \\ \vx_2 - \vmu_2 \end{bmatrix}
-\right\rbrace \nonumber \\
+\begin{bmatrix} \vy_1 -\mSigma_{12} \mSigma_{22}^{-1} (\vy_2) \\ \vy_2 \end{bmatrix}
+\right\rbrace \\
 %
 &= \exp \left\lbrace -\frac{1}{2}
-((\vx_1 - \vmu_1)^T - (\vx_2 - \vmu_2)^T (\mSigma_{22}^{-1} \mSigma_{21})) (\mSigma/\mSigma_{22})^{-1} (\vx_1 - \vmu_1 -\mSigma_{12} \mSigma_{22}^{-1} (\vx_2 - \vmu_2))
+(\vy_1^T - \vy_2^T \mSigma_{22}^{-1} \mSigma_{21}) (\mSigma/\mSigma_{22})^{-1} (\vy_1 -\mSigma_{12} \mSigma_{22}^{-1} \vy_2)
 \right\rbrace \times \\
-& \qquad\qquad \times \exp \left\lbrace -\frac{1}{2} (\vx_2 - \vmu_2) \mSigma_{22}^{-1} (\vx_2 - \vmu_2) \right\rbrace \nonumber
+& \qquad\qquad \times \exp \left\lbrace -\frac{1}{2} \vy_2^T \mSigma_{22}^{-1} \vy_2 \right\rbrace \nonumber
+\end{align}
+
+We can immediately see that the second term is a quadratic form in $\vx_2$ and corresponds to $\gN(\vx_2 | \vmu_2, \mSigma_{22})$. Let us now consider the first term in isolation and move the terms around a little bit. We also make use of the fact that because $\mSigma_{22}$ is a positive-definite \todo{check this and maybe show a small proof?} matrix, its inverse is also symmetric, so $\mSigma^{-1^T}_{22} = \mSigma^{-1}_{22}$. We also know that $\mSigma^T_{12} = \mSigma_{21}$.
+
+\begin{align}
+E_{1|2} &= \exp \left\lbrace -\frac{1}{2}
+(\vy_1^T - \vy_2^T \mSigma_{22}^{-1} \mSigma_{21}) (\mSigma/\mSigma_{22})^{-1} (\vy_1 -\mSigma_{12} \mSigma_{22}^{-1} \vy_2) \right\rbrace \\
+&= \exp \left\lbrace -\frac{1}{2}
+(\vy_1 - \mSigma_{12}\mSigma_{22}^{-1} \vy_2)^T (\mSigma/\mSigma_{22})^{-1} (\vy_1 -\mSigma_{12} \mSigma_{22}^{-1} \vy_2) \right\rbrace \\
+&= \exp \left\lbrace -\frac{1}{2}
+(\vx_1 - \vmu_1 - \mSigma_{12}\mSigma_{22}^{-1} (\vx_2 - \vmu_2)^T (\mSigma/\mSigma_{22})^{-1} (\vx_1 - \vmu_1 -\mSigma_{12} \mSigma_{22}^{-1} (\vx_2 - \vmu_2)) \right\rbrace \label{eq:mvn-quadratic-form-12}
+\end{align}
+
+In \eqref{eq:mvn-quadratic-form-12} we again see a Gaussian density with
+
+\begin{align}
+\vmu_{1|2} &= \vmu_1 - \mSigma_{12}\mSigma_{22}^{-1} (\vx_2 - \vmu_2) \\
+\mSigma_{1|2} &= (\mSigma/\mSigma_{22})^{-1} =  \ms{11} - \ms{12} \ms{22}^{-1} \ms{21}
 \end{align}
 \end{proof}
+
 
 \section{Gaussian Processes}
 
